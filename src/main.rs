@@ -19,7 +19,6 @@ fn main() {
     });
 }
 
-
 // we build only to wasm
 #[cfg(not(target_arch = "wasm32"))]
 fn main() {}
