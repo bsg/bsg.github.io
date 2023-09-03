@@ -1,29 +1,26 @@
-<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <!-- Disable zooming: -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
-
+<head>
     <title>bsg</title>
 
     <!-- config for our rust wasm binary. go to https://trunkrs.dev/assets/#rust for more customization -->
-    <script type="module">import init from '/bsgapp-2b0010f6af5b09c9.js';init('/bsgapp-2b0010f6af5b09c9_bg.wasm');</script>
+    <link data-trunk rel="rust" data-wasm-opt="2" />
     <!-- this is the base url relative to which other urls will be constructed. trunk will insert this from the public-url option -->
-    <base href="/">
+    <base data-trunk-public-url />
 
-    <link rel="icon" href="/favicon-f402c8741ce815ec.ico">
+    <link data-trunk rel="icon" href="assets/favicon.ico">
 
 
-    
-    
-    
-    
-    
-    
+    <link data-trunk rel="copy-file" href="assets/sw.js" />
+    <link data-trunk rel="copy-file" href="assets/manifest.json" />
 
 
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon_ios_touch_192.png">
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="white">
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#404040">
 
@@ -113,9 +110,7 @@
         }
 
     </style>
-
-<link rel="preload" href="/bsgapp-2b0010f6af5b09c9_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
-<link rel="modulepreload" href="/bsgapp-2b0010f6af5b09c9.js"></head>
+</head>
 
 <body>
     <!-- The WASM code will resize the canvas dynamically -->
@@ -132,9 +127,8 @@
             });
         }
     </script>
+</body>
 
+</html>
 
-
-
-
-</body></html><!-- Powered by egui: https://github.com/emilk/egui/ -->
+<!-- Powered by egui: https://github.com/emilk/egui/ -->
