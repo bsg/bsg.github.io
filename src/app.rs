@@ -1,8 +1,8 @@
 mod github;
+mod window;
 
-use std::sync::{Arc, RwLock};
-use egui::{Align2, RichText};
 use self::github::LatestCommits;
+use std::sync::{Arc, RwLock};
 
 pub struct BsgApp {
     whoami_open: bool,
@@ -72,74 +72,28 @@ impl BsgApp {
 
 impl eframe::App for BsgApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        egui::TopBottomPanel::top("top_panel").min_height(20.0).show(ctx, |ui| {
-            egui::menu::bar(ui, |ui| {
-                ui.menu_button("About", |ui| {
-                    if ui.button("whoami").clicked() {
-                        self.whoami_open = true;
-                    }
-                });
-                egui::warn_if_debug_build(ui);
-            });
-        });
+        let is_portrait = ctx.available_rect().aspect_ratio() < 1.0;
 
-        egui::CentralPanel::default().show(ctx, |ui| {
-            egui::Window::new("$ whoami")
-                .pivot(Align2::CENTER_CENTER)
-                .default_pos(ctx.screen_rect().center_top())
-                .resizable(true)
-                .default_size([800.0, 800.0])
-                .open(&mut self.whoami_open)
+        if !is_portrait {
+            egui::TopBottomPanel::top("top_panel")
+                .min_height(20.0)
                 .show(ctx, |ui| {
-                    ui.horizontal(|ui| {
-                        if let Some(hnd) = &self.pp_hnd.read().unwrap().to_owned() {
-                            ui.image(hnd.id(), hnd.size_vec2());
-                        } else {
-                            ui.spinner();
-                        }
-                        ui.vertical(|ui| {
-                            ui.label(RichText::new("Cem").size(24.0));
-                            use egui::special_emojis::GITHUB;
-                            ui.hyperlink_to(
-                                RichText::new(format!("{GITHUB} github.com/bsg")).size(14.0),
-                                "http://github.com/bsg",
-                            );
-                            ui.end_row();
-                            ui.hyperlink_to(
-                                RichText::new("✉ cem.saldirim@gmail.com").size(14.0),
-                                "mailto://cem.saldirim@gmail.com",
-                            );
-                        });
-                    });
-                    ui.separator();
-                    egui::CollapsingHeader::new("Latest Commits")
-                        .default_open(true)
-                        .show(ui, |ui| {
-                            if let Some(commits) = &*self.latest_commits.read().unwrap() {
-                                egui::Grid::new("commits_grid")
-                                    .num_columns(2)
-                                    .striped(true)
-                                    .min_col_width(ui.available_width())
-                                    .show(ui, |ui| {
-                                        for commit in commits.commits.iter().take(20) {
-                                            ui.horizontal(|ui| {
-                                                ui.hyperlink_to(
-                                                    format!("[{}]", commit.repo_name),
-                                                    &commit.repo_url,
-                                                );
-
-                                                ui.horizontal_wrapped(|ui| {
-                                                    ui.label(&commit.message_short);
-                                                });
-                                            });
-                                            ui.end_row();
-                                        }
-                                    });
-                            } else {
-                                ui.spinner();
+                    egui::menu::bar(ui, |ui| {
+                        ui.menu_button("About", |ui| {
+                            if ui.button("whoami").clicked() {
+                                self.whoami_open = true;
                             }
                         });
+                        egui::warn_if_debug_build(ui);
+                    });
                 });
+        }
+
+        egui::CentralPanel::default().show(ctx, |ui| {
+            window::whoami::render(self, ctx, ui, is_portrait);
+            if !is_portrait {
+                // TODO sum shit
+            };
         });
     }
 }

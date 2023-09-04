@@ -56,11 +56,11 @@ impl LatestCommits {
                                 // TODO make this a util
                                 let mut msg_short: String = commit
                                     .message
-                                    .split("\n")
+                                    .split('\n')
                                     .nth(0)
                                     .unwrap_or_default()
                                     .to_string();
-                                if msg_short.len() > 50 {
+                                if msg_short.len() > 50 { // FIXME :'(
                                     msg_short.truncate(47);
                                     msg_short.push_str("...");
                                 }
