@@ -1,6 +1,6 @@
-use std::sync::{Arc, RwLock};
 use egui::ColorImage;
 use serde::{Deserialize, Serialize};
+use std::sync::{Arc, RwLock};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct Commit {
@@ -60,7 +60,8 @@ impl LatestCommits {
                                     .nth(0)
                                     .unwrap_or_default()
                                     .to_string();
-                                if msg_short.len() > 50 { // FIXME :'(
+                                if msg_short.len() > 50 {
+                                    // FIXME :'(
                                     msg_short.truncate(47);
                                     msg_short.push_str("...");
                                 }

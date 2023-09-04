@@ -1,6 +1,8 @@
 mod github;
 mod window;
 
+use egui::{FontId, TextStyle};
+
 use self::github::LatestCommits;
 use std::sync::{Arc, RwLock};
 
@@ -46,6 +48,11 @@ impl BsgApp {
             egui::FontData::from_static(include_bytes!("../fonts/Hack-Regular.ttf")),
         );
 
+        fonts.font_data.insert(
+            "roboto-regular".to_owned(),
+            egui::FontData::from_static(include_bytes!("../fonts/Roboto-Regular.ttf")),
+        );
+
         fonts
             .families
             .entry(egui::FontFamily::Proportional)
@@ -73,6 +80,17 @@ impl BsgApp {
 impl eframe::App for BsgApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         let is_portrait = ctx.available_rect().aspect_ratio() < 1.0;
+
+        if is_portrait {
+            // TODO we probably don't wanna do this every frame
+            let mut style: egui::Style = (*ctx.style()).clone();
+            style.text_styles.insert(
+                TextStyle::Small,
+                FontId::new(11.0, egui::FontFamily::Monospace),
+            );
+            _ = style.override_text_style.insert(egui::TextStyle::Small);
+            ctx.set_style(style);
+        }
 
         if !is_portrait {
             egui::TopBottomPanel::top("top_panel")
