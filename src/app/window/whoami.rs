@@ -1,4 +1,4 @@
-use egui::{Align2, Color32, RichText, Ui};
+use egui::{Align2, Color32, Frame, RichText, Style, Ui};
 
 use crate::BsgApp;
 
@@ -12,17 +12,14 @@ pub fn render(app: &mut BsgApp, ctx: &egui::Context, _ui: &mut Ui, is_portrait: 
         })
         .resizable(!is_portrait)
         .default_size([800.0, 800.0])
-        .min_height(if is_portrait {
-            ctx.screen_rect().bottom()
-        } else {
-            0.0
-        })
         .vscroll(true)
         .collapsible(!is_portrait)
         .movable(!is_portrait)
         .title_bar(!is_portrait)
+        .frame(if is_portrait {Frame::none()} else {Frame::window(&Style::default())})
         .open(&mut app.whoami_open)
         .show(ctx, |ui| {
+            ui.add_space(if is_portrait {8.0} else {4.0});
             ui.horizontal(|ui| {
                 if let Some(hnd) = &app.pp_hnd.read().unwrap().to_owned() {
                     ui.image(hnd.id(), hnd.size_vec2());
@@ -30,7 +27,7 @@ pub fn render(app: &mut BsgApp, ctx: &egui::Context, _ui: &mut Ui, is_portrait: 
                     ui.spinner();
                 }
                 ui.vertical(|ui| {
-                    ui.label(RichText::new("Cem").size(24.0));
+                    ui.label(RichText::new("Cem").text_style(egui::TextStyle::Heading));
                     use egui::special_emojis::GITHUB;
                     ui.hyperlink_to(
                         RichText::new(format!("{GITHUB} github.com/bsg")),
@@ -63,7 +60,7 @@ pub fn render(app: &mut BsgApp, ctx: &egui::Context, _ui: &mut Ui, is_portrait: 
                             .striped(true)
                             .min_col_width(ui.available_width())
                             .show(ui, |ui| {
-                                for commit in commits.commits.iter().take(20) {
+                                for commit in commits.commits.iter().take(5) {
                                     ui.horizontal(|ui| {
                                         ui.hyperlink_to(
                                             format!("[{}]", commit.repo_name),

@@ -85,10 +85,9 @@ impl eframe::App for BsgApp {
             // TODO we probably don't wanna do this every frame
             let mut style: egui::Style = (*ctx.style()).clone();
             style.text_styles.insert(
-                TextStyle::Small,
+                TextStyle::Body,
                 FontId::new(11.0, egui::FontFamily::Monospace),
             );
-            _ = style.override_text_style.insert(egui::TextStyle::Small);
             ctx.set_style(style);
         }
 
@@ -106,7 +105,7 @@ impl eframe::App for BsgApp {
                     });
                 });
         }
-
+        
         egui::CentralPanel::default().show(ctx, |ui| {
             window::whoami::render(self, ctx, ui, is_portrait);
             if !is_portrait {
